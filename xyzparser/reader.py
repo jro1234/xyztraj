@@ -16,11 +16,6 @@ class XYZReader(object):
     '''Class that reads XYZ trajectory data
     This class currently can be used to read and return
     a complete XYZ trajectory.
-
-    Returns
-    -------
-    tuple of two numpy arrays of (mx3xn, dtype=np.float64) all `m` atom
-    coordinates in `n` frames and (mx1, dtype='s1') all elements
     '''
     def __init__(self):
         super(XYZReader, self).__init__()
@@ -38,11 +33,16 @@ class XYZReader(object):
     def readfile(self, xyzfilepath, nframes=None, blocksize=None, stride=None):
         # TODO stride
         '''User function for reading file
+
         Arguments
         ---------
         framekey :: str pattern indicating top of a new frame
         blocksize :: int number of frames to read between Trajectory object updates
         stride :: int read every nth frame given by stride
+
+        Returns
+        -------
+        XYZTrajectory instance
         '''
         self.openfile(xyzfilepath)
         trajectory = self._read(nframes, blocksize)
@@ -53,6 +53,7 @@ class XYZReader(object):
     def _readblocks(self, framekey, blocksize=None):
         '''This function does actual file reading
         Replace with C code.
+
         Arguments
         ---------
         framekey :: str pattern indicating top of a new frame
@@ -146,7 +147,7 @@ class XYZReader(object):
         return iterblocks
 
     def __iter__(self):
-        # TODO implement via _build_iterator
+        # TODO implement via blockReadIterator
         raise NotImplementedError
 
     
