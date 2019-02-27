@@ -1,7 +1,16 @@
 
 import os
 
+from itertools import chain
+
 from xyzparser.trajectory import XYZTrajectory
+
+
+class blockReadIterator(object):
+    '''Class that executes a read function when iterated
+    '''
+    pass
+
 
 class XYZReader(object):
     '''Class that reads XYZ trajectory data
@@ -27,16 +36,19 @@ class XYZReader(object):
         self._file = open(xyzfilepath, 'r')
 
     def readfile(self, xyzfilepath, nframes=None, blocksize=None, stride=None):
-        # TODO support blocksize and nframes concurrently
-        #       - read blocks until nframes reached
-        #       - current nframes only works if less than blocksize
+        # TODO stride
         '''User function for reading file
-        This function to be expanded with chunk/stream
-        capability using _iterread
+        Arguments
+        ---------
+        framekey :: str pattern indicating top of a new frame
+        blocksize :: int number of frames to read between Trajectory object updates
+        stride :: int read every nth frame given by stride
         '''
         self.openfile(xyzfilepath)
-        self._read(nframes)
+        trajectory = self._read(nframes, blocksize)
         self.closefile()
+
+        return trajectory
 
     def _readblocks(self, framekey, blocksize=None):
         '''This function does actual file reading
@@ -69,9 +81,9 @@ class XYZReader(object):
 
                 print("blocksize: ", blocksize)
                 print("block size: ", len(block))
-                print("blocks sizes: ", [len(block) for b in block])
+                print("blocks sizes: ", [len(b) for b in block])
                 if blocksize and len(block) == blocksize:
-                    print("Giving up from blocksize match")
+                    print("Giving up from blocksize match\n\n")
                     yield block
                     block = list()
 
@@ -83,29 +95,58 @@ class XYZReader(object):
         assert not self._file.closed
 
         framekey = next(self._file).strip()
-
-        if blocksize is None:
-            if nframes is None:
-                # read to end in 1 block
-                iterblocks = iter(self._readblocks(framekey))
-            else:
-                # read to nframes in 1 block
-                iterblocks = iter([next(self._readblocks(framekey, blocksize=nframes))])
-        else:
-            if nframes is None:
-                # read to end in blocks of size blocksize
-                iterblocks = iter(self._readblocks(framekey, blocksize=blocksize))
-            else:
-                # read to nframes in blocks of size blocksize
-                nblocks = bool(nframes%blocksize) + (nframes // blocksize)
-                nframes = nframes % blocksize
-                iterblocks = iter([next(self._readblocks(framekey, blocksize=blocksize)) for i in range(nblocks-1)]+[self._readblocks(framekey, blocksize=nframes)])
-
+        iterblocks = self._build_iterator(framekey, nframes, blocksize)
+        print("iterblocks: {}".format(iterblocks))
         trajectory = XYZTrajectory()
-        for block in iterblocks:
+
+        # TODO replace with blockReadIterator
+        #      - then can remove parathesis in for loop
+        for block in iterblocks():
             print("Got block", len(block))
             trajectory.add_frames(block)
+
+        return trajectory
 
     def closefile(self):
         self._file.close()
 
+    # TODO replace with blockReadIterator
+    def _build_iterator(self, framekey, nframes, blocksize):
+        assert isinstance(nframes, (int,type(None)))
+        assert isinstance(blocksize, (int,type(None)))
+
+        iterblocks = None
+        if blocksize is None:
+            if nframes is None:
+                # read to end in 1 block
+                iterblocks = lambda: iter(self._readblocks(framekey))
+            else:
+                # read to nframes in 1 block
+                iterblocks = lambda: iter([next(self._readblocks(framekey, blocksize=nframes))])
+
+        else:
+            if nframes is None:
+                # read to end in blocks of size blocksize
+                iterblocks = lambda: iter(self._readblocks(framekey, blocksize=blocksize))
+            else:
+                # read to nframes in blocks of size blocksize
+                nblocks = bool(nframes%blocksize) + (nframes // blocksize)
+                if nframes % blocksize:
+                    nframes %= blocksize
+                else:
+                    nframes = blocksize
+
+                print(nblocks, blocksize, nframes)
+                iterblocks = lambda: chain.from_iterable(
+                  iter([next(self._readblocks(framekey, blocksize=blocksize))
+                        for i in range(nblocks-1)]\
+                  +[next(self._readblocks(framekey, blocksize=nframes))])
+                )
+
+        return iterblocks
+
+    def __iter__(self):
+        # TODO implement via _build_iterator
+        raise NotImplementedError
+
+    
