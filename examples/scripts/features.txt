@@ -1,0 +1,23 @@
+
+Chi Torsion
+1, 4, 14, 19
+154.2
+
+## O, H,  N
+## 8, 9, 18
+## 146.0
+
+Internal H-Bond
+---------------
+Side
+N, H
+1.81
+
+Angle
+O,N,H
+12.13
+
+Side
+O,N
+2.72
+
