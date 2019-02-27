@@ -1,15 +1,16 @@
 
 import numpy as np
 
-def featurizer(corefunc, *fargs, **fkwargs):
-    print("corefunc", corefunc)
-    print("*fargs, **fkwargs", fargs, fkwargs)
-    def wrapper(*args, **kwargs):
-        print("*args, **kwargs", args, kwargs)
-        featurized = np.apply_along_axis(corefunc, 0, featurefunc(*args, **kwargs))
-        return featurized
 
-    return wrapper
+def featurizer(corefunc):
+    def _featurizer(featurefunc):
+        def wrapper(array):
+            assert isinstance(array, np.ndarray)
+            featurized = np.apply_along_axis(corefunc, 0, array)
+            return featurized
+        return wrapper
+    return _featurizer
+
 
 def _dihedral(p):
     '''Praxeolitic formula
@@ -44,7 +45,8 @@ def _dihedral(p):
 
     return np.degrees(np.arctan2(y, x))
 
-@featurizer
-def dihedral(p_array):
+
+@featurizer(_dihedral)
+def dihedral(p_array, dumb):
     return p_array
 
