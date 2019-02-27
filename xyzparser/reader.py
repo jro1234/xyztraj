@@ -69,27 +69,22 @@ class XYZReader(object):
             return frame
 
         reading = True
-        block = list()
+        # USING Instance Attribute self.__block
+        # Workaround for inability to handle StopIteration
+        # with outer layers, fix with blockReadIterator
+        self.__block = list()
         while reading:
-            print("Reading now")
             frame = list()
             try:
                 firstline = next(self._file).split()
-                print("\n\n ON NEWFRAME----------------------------#")
-                print("got firstline", firstline)
                 frame = byframe(framekey)
-                block.append(frame)
+                self.__block.append(frame)
 
-                print("blocksize: ", blocksize)
-                print("block size: ", len(block))
-                print("blocks sizes: ", [len(b) for b in block])
-                if blocksize and len(block) == blocksize:
-                    print("Giving up from blocksize match\n\n")
-                    yield block
-                    block = list()
+                if blocksize and len(self.__block) == blocksize:
+                    yield None
+                    self.__block = list()
 
             except StopIteration:
-                print("StopIteration")
                 reading = False
 
     def _read(self, nframes=None, blocksize=None):
@@ -97,15 +92,18 @@ class XYZReader(object):
 
         framekey = next(self._file).strip()
         iterblocks = self._build_iterator(framekey, nframes, blocksize)
-        print("iterblocks: {}".format(iterblocks))
         trajectory = XYZTrajectory()
 
         # TODO replace with blockReadIterator
         #      - then can remove parathesis in for loop
-        for block in iterblocks():
-            print("Got block", block)
-            print("Got block", len(block))
-            trajectory.add_frames(block)
+        try:
+            for __none_block in iterblocks():
+                trajectory.add_frames(self.__block)
+
+        except StopIteration:
+            # blockReadIterator to handle done reading better
+            trajectory.add_frames(self.__block)
+            del self.__block
 
         return trajectory
 
@@ -138,7 +136,6 @@ class XYZReader(object):
                 else:
                     nframes = blocksize
 
-                print(nblocks, blocksize, nframes)
                 iterblocks = lambda: iter([
                   next(self._readblocks(framekey, blocksize=blocksize)) 
                   if i < nblocks-1 else
