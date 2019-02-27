@@ -1,7 +1,6 @@
 
 import numpy as np
 
-
 def featurizer(corefunc):
     def _featurizer(featurefunc):
         def wrapper(array):
@@ -12,15 +11,21 @@ def featurizer(corefunc):
     return _featurizer
 
 
-def _dihedral(p):
+def _dihedral(points):
     '''Praxeolitic formula
+    Arguments
+    ---------
+    points :: numpy array (4x3)
+    4 points in cartesian 3D space
+    Returns
+    -------
     Dihedral from 1 sqrt, 1 cross product
     from :: https://stackoverflow.com/questions/20305272/dihedral-torsion-angle-from-four-points-in-cartesian-coordinates-in-python
     '''
-    p0 = p[0]
-    p1 = p[1]
-    p2 = p[2]
-    p3 = p[3]
+    p0 = points[0]
+    p1 = points[1]
+    p2 = points[2]
+    p3 = points[3]
 
     b0 = -1.0*(p1 - p0)
     b1 = p2 - p1
