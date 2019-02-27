@@ -103,6 +103,7 @@ class XYZReader(object):
         # TODO replace with blockReadIterator
         #      - then can remove parathesis in for loop
         for block in iterblocks():
+            print("Got block", block)
             print("Got block", len(block))
             trajectory.add_frames(block)
 
@@ -138,11 +139,12 @@ class XYZReader(object):
                     nframes = blocksize
 
                 print(nblocks, blocksize, nframes)
-                iterblocks = lambda: chain.from_iterable(
-                  iter([next(self._readblocks(framekey, blocksize=blocksize))
-                        for i in range(nblocks-1)]\
-                  +[next(self._readblocks(framekey, blocksize=nframes))])
-                )
+                iterblocks = lambda: iter([
+                  next(self._readblocks(framekey, blocksize=blocksize)) 
+                  if i < nblocks-1 else
+                  next(self._readblocks(framekey, blocksize=nframes))
+                  for i in range(nblocks)
+                ])
 
         return iterblocks
 
