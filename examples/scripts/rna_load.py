@@ -1,4 +1,5 @@
-from xyzparser import XYZReader
+
+from xyztraj import XYZReader
 
 xyzfile = '../../examples/data/sim1_pos_all.xyz'
 r = XYZReader()

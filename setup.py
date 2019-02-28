@@ -2,9 +2,9 @@
 from setuptools import setup
 
 setup(
-    name='xyzparser',
+    name='xyztraj',
     version='0.1dev',
-    packages=['xyzparser'],#'reader','trajectory'],
+    packages=['xyztraj'],#'reader','trajectory'],
     license='GNU',
     #long_description=open('README.txt').read(),
 )
