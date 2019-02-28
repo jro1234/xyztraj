@@ -1,6 +1,12 @@
+# images from examples plots
+*png
+
 # temporary files
 *.swp
 *.swo
+
+# Mac somethingorother
+*DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
