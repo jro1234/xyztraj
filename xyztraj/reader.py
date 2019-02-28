@@ -3,7 +3,7 @@ import os
 
 from itertools import chain
 
-from xyzparser.trajectory import XYZTrajectory
+from xyztraj.trajectory import XYZTrajectory
 
 
 class blockReadIterator(object):
