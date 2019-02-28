@@ -1,6 +1,6 @@
 
-from xyztraj.reader import XYZReader
-from xyztraj.trajectory import XYZTrajectory
+from .reader import XYZReader
+from .trajectory import XYZTrajectory
 
-from xyztraj import featurize
+from . import features
 
