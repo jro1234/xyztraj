@@ -6,6 +6,8 @@ import numpy as np
 from xyztraj.featurize import _feature as feature
 
 
+# TODO as_feature that applies argument structure
+#      and only takes feature_calculator argument
 def angle(trajectory_array, atom_indices=None):
     return feature(_angle, trajectory_array, atom_indices)()
 
@@ -105,5 +107,9 @@ def _dihedral(points):
     x = np.dot(v, w)
     y = np.dot(np.cross(b1, v), w)
 
-    return np.degrees(np.arctan2(y, x))
+    # FIXME not a robust method to unwrap
+    angle = np.degrees(np.arctan2(y, x))
+
+    return angle if angle>0 else 360+angle
+
 
