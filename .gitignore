@@ -1,3 +1,9 @@
+# additional example data
+examples/data/*
+
+# plots from the example
+examples/scripts/plots
+
 # images from examples plots
 *png
 

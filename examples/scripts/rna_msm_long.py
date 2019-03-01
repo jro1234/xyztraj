@@ -16,8 +16,9 @@ from xyztraj.features import (
   dihedral, nofeature, distance, angle
 )
 
-plotdir = lambda d: os.path.join("plots/4shorttrajs", d)
-datadir = '../data'
+plotdir = lambda d: os.path.join("plots/longtraj", d)
+datadir = '../data/Sedova_Ossyra_AIMD_AMD'
+
 try:
     os.makedirs(plotdir(''))
 except FileExistsError:
@@ -26,8 +27,7 @@ except FileExistsError:
 #=======================================#
 # Step 1: Where are my Trajectory Files #
 #=======================================#
-xyzfiles = [os.path.join(datadir, fnm) for fnm in
- filter(lambda fn: fn.startswith('sim'), os.listdir(datadir))]
+xyzfiles = [os.path.join(datadir, fnm) for fnm in os.listdir(datadir)]
 
 #=======================================#
 # Step 2: Read the Trajectory Files     #
@@ -112,10 +112,12 @@ clusts = list()
 
 # TICA Landscapes
 for i,tica in enumerate(ticas):
+    try:
     pymplt.plot_free_energy(*tica.get_output([0,1])[0].T)
     #plt.scatter(clusts[i].clustercenters[:,:2], 
     plt.savefig(plotdir('tica-{}/tica-cc-landscape.png'.format(tica.lag)))
     plt.close()
+    except 
 
 # making MSMs for each lag
 its = list()

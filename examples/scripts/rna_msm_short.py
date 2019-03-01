@@ -83,11 +83,12 @@ def finalize_chi_vs_ONdist(nametag=''):
     plt.savefig(plotdir("trajs-tica{}.png".format(nametag)), dpi=600)
     plt.close()
 
-# Each traj Alone
+# Each Alone
 for i in range(len(tj_chi)):
     plt.scatter(tj_chi[i], tj_ONdist[i], c=range(len(tj_chi[i])), s=0.5)
     finalize_chi_vs_ONdist(i)
 
+# All Together
 for i in range(len(tj_chi)):
     plt.scatter(tj_chi[i], tj_ONdist[i], c=range(len(tj_chi[i])), s=0.5)
 

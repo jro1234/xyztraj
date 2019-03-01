@@ -12,6 +12,7 @@ class blockReadIterator(object):
     pass
 
 
+# FIXME read logic depends on 2-line frame headers
 class XYZReader(object):
     '''Class that reads XYZ trajectory data
     This class currently can be used to read and return
@@ -19,16 +20,20 @@ class XYZReader(object):
     '''
     def __init__(self):
         super(XYZReader, self).__init__()
+
         self._filepath = None
         self._file = None
         # TODO config options for reading
         self._len_header = 0
         self._len_frameheader = 2
 
+
     def openfile(self, xyzfilepath):
         assert os.path.exists(xyzfilepath)
+
         self._filepath = xyzfilepath
         self._file = open(xyzfilepath, 'r')
+
 
     def readfile(self, xyzfilepath, nframes=None, blocksize=None, stride=None):
         # TODO stride
@@ -50,6 +55,7 @@ class XYZReader(object):
 
         return trajectory
 
+
     def _readblocks(self, framekey, blocksize=None):
         '''This function does actual file reading
         Replace with C code.
@@ -60,19 +66,24 @@ class XYZReader(object):
         blocksize :: int number of frames to read between Trajectory object updates
         '''
         def byframe(stopkey):
+            '''large reads only happen in this function's loop
+            '''
             frame = list()
+
             for line in self._file:
                 if line.strip() == stopkey:
                     break
                 else:
                     frame.append(line.split())
+
             return frame
 
-        reading = True
         # USING Instance Attribute self.__block
         # Workaround for inability to handle StopIteration
         # with outer layers, fix with blockReadIterator
         self.__block = list()
+
+        reading = True
         while reading:
             frame = list()
             try:
@@ -87,6 +98,7 @@ class XYZReader(object):
             except StopIteration:
                 reading = False
 
+
     def _read(self, nframes=None, blocksize=None):
         assert not self._file.closed
 
@@ -97,6 +109,7 @@ class XYZReader(object):
         # TODO replace with blockReadIterator
         #      - then can remove parathesis in for loop
         try:
+            # blocks are being stored as transient attribute
             for __none_block in iterblocks():
                 trajectory.add_frames(self.__block)
 
@@ -107,10 +120,15 @@ class XYZReader(object):
 
         return trajectory
 
+
     def closefile(self):
+        '''Close the XYZ trajectory file
+        '''
         self._file.close()
 
+
     # TODO replace with blockReadIterator
+    # FIXME reads to eof only work as single nframes-size block
     def _build_iterator(self, framekey, nframes, blocksize):
         assert isinstance(nframes, (int,type(None)))
         assert isinstance(blocksize, (int,type(None)))
@@ -144,6 +162,7 @@ class XYZReader(object):
                 ])
 
         return iterblocks
+
 
     def __iter__(self):
         # TODO implement via blockReadIterator
