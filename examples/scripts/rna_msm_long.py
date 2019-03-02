@@ -27,7 +27,8 @@ except FileExistsError:
 #=======================================#
 # Step 1: Where are my Trajectory Files #
 #=======================================#
-xyzfiles = [os.path.join(datadir, fnm) for fnm in os.listdir(datadir)]
+xyzfiles = [os.path.join(datadir, fnm)
+  for fnm in os.listdir(datadir)]
 
 #=======================================#
 # Step 2: Read the Trajectory Files     #
