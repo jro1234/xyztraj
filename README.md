@@ -1,10 +1,10 @@
 
-This package is for reading xyz trajectories in Python, then preparing
+XYZTraj is for reading xyz trajectories in Python, then preparing
 the data for other Python-based trajectory analysis tools. We will call
 this 'featurizing' the data, i.e. creating new trajectories by applying
 a calculation to all the frames in the trajectory.
 
-You can clone and install this repository with
+You can clone this repository and install the package with
 ```bash
 git clone https://github.com/jrossyra/xyzparser
 cd xyzparser
@@ -14,13 +14,16 @@ python setup.py install
 There are
 2 objects associated with retrieving data, an `XYZReader` that gets the data from a
 file, and a `XYZTrajectory` object that this reader creates and
-returns. Once you have this, you can apply featurizers to create a new
+returns. Once you have the trajectory object, you can apply feature calculations with
+the `Featurizer` object to create a new
 trajectory in feature space.
 
-To read an xyz trajectory file, use it like this:
+Read an xyz trajectory file like this:
 ```python
 from xyztraj import XYZReader
+
 reader = XYZReader()
+# An XYZTrajectory
 traj = reader.readfile('mytraj.xyz')
 # A numpy array of the coordinates
 traj.trajectory
@@ -32,13 +35,16 @@ There are options for how to provide the featurizing function, here we just give
 the name of functions in the `xyztraj.features` package. 
 ```python
 from xyztraj.features import Featurizer
+
 dihedral_atoms = [0,10,11,3]
 keep_position_atoms = [2,4,6]
 features = {'dihedral': dihedral_atoms, 'nofeature': keep_position_atoms}
+
 featurizer = Featurizer(traj.trajectory)
 featurizer.add_features(features)
 featurizer.featurize()
 featuretraj = featurizer.trajectory
+
 # (mxd) shape of m frames by d feature dimensions
 featuretraj.shape
 ```
@@ -49,12 +55,13 @@ Also, we can just keep featurizing the trajectory and append
 to the featurespace.
 ```python
 from xyztraj.features import distance
+
 distance_atoms = [0,1]
 featurizer.add_features({distance: distance_atoms})
 featurizer.featurize()
+
 # larger by the 1 feature dimension we just added
 featuretraj.shape
-featurizer.trajectory.shape
 ```
 
 We show the good practice of enforcing some input structure so
@@ -69,8 +76,8 @@ def calc_weirdfeature(atomcoordinates):
     return np.mean(atomcoordinates)
 
 weirdfeature_atoms = [13,11,15]
-
 weirdfeature = {calc_weirdfeature: weirdfeature_atoms}
+
 featurizer.add_features(weirdfeature)
 featurizer.featurize()
 featuretraj.shape
