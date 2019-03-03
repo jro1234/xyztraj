@@ -3,7 +3,7 @@ import numpy as np
 
 # Nice name for each feature, users should import from
 # here to make features in their own scripts
-from .featurize import _feature as feature
+from ._featurize import _feature as feature
 
 
 # TODO as_feature that applies argument structure

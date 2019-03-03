@@ -1,6 +1,7 @@
 
 import numpy as np
 
+
 class XYZTrajectory(object):
     '''Interface object to trajectory data
 
@@ -19,9 +20,11 @@ class XYZTrajectory(object):
         #TODO self._elements
         self._trajectory = None
 
+
     @property
     def atoms(self):
         return self._atoms
+
 
     @property
     def trajectory(self):
@@ -38,6 +41,7 @@ class XYZTrajectory(object):
 
         return self._trajectory
 
+
     def add_frames(self, frames_block):
         '''Add a block of frames to this trajectory instance
         '''
@@ -53,7 +57,9 @@ class XYZTrajectory(object):
 
         self._frames.append(frames)
 
+
     def __getitem__(self):
+        # list-like slice indexing plz!
         # Navigate list of arrays or
         # build one larger one somewhere?
         raise NotImplementedError
