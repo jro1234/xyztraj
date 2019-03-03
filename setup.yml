@@ -1,0 +1,49 @@
+
+name:         XYZTraj
+license:      LGPL 3.0 or later
+license_file: LICENSE
+description:  'Simple tools for topology-free reading and working with XYZ trajectory files.'
+download_url: https://github.com/jrossyra/xyztraj
+url:          https://github.com/jrossyra/xyztraj
+released:     false
+
+authors:
+- John Ossyra
+
+emails:
+- jrossyra@gmail.com
+
+long_description: |
+  XYZTraj implements an XYZ file reading object and trajectory object
+  for working with XYZ files and no topology information. The featurizer
+  can then be used to analyze the trajectory data using built-in or
+  user-provided feature definitions.
+
+classifiers: |
+  Development Status :: 3 - Alpha
+  Intended Audience :: Science/Research
+  Intended Audience :: Developers
+  License :: OSI Approved :: GNU Lesser General Public License v3.0 or later (LGPLv3.0+)
+  Programming Language :: Python
+  Programming Language :: Python :: 3
+  Topic :: Scientific/Engineering :: Bio-Informatics
+  Topic :: Scientific/Engineering :: Chemistry
+  Operating System :: POSIX
+  Operating System :: Unix
+  Operating System :: MacOS
+
+packages:
+- xyztraj
+- xyztraj.features
+
+platforms:
+- Linux
+- Mac OS X
+
+#scripts:
+#  - adaptivemd/scripts/adaptivemdworker
+
+install_requires:
+- python
+- pyyaml
+- numpy
