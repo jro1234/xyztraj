@@ -68,8 +68,8 @@ def build_keyword_dictionary(prefs):
     return keywords
 
 
-# load settings from setup.yaml
-with open('setup.yaml') as f:
+# load settings from setup.yml
+with open('setup.yml') as f:
     yaml_string = ''.join(f.readlines())
     preferences = yaml.load(yaml_string)
 

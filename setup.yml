@@ -44,6 +44,5 @@ platforms:
 #  - adaptivemd/scripts/adaptivemdworker
 
 install_requires:
-- python
 - pyyaml
 - numpy
