@@ -1,0 +1,19 @@
+
+language: python
+sudo: false
+
+env:
+  matrix:
+    - CONDA_PY=3.6
+    - CONDA_PY=3.7
+
+before_install:
+- source devtools/ci/install.sh
+- conda install conda-build
+- conda install conda-verify
+
+script:
+- conda build -q devtools/conda-recipe
+
+after_script:
+- bash <(curl -s https://codecov.io/bash) -f $HOME/coverage.xml -e CONDA_PY
