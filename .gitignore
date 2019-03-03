@@ -3,6 +3,7 @@ examples/data/*
 
 # plots from the example
 examples/scripts/plots
+examples/scripts/samples
 
 # images from examples plots
 *png
