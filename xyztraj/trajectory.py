@@ -31,7 +31,7 @@ class XYZTrajectory(object):
             if self._trajectory is None:
                 self._trajectory = np.concatenate(self._frames)
             else:
-                self._trajectory = np.concatenate([self._trajectory]+self._frames)
+                self._trajectory = np.concatenate([self._trajectory] + self._frames)
 
             del self._frames
             self._frames = []
