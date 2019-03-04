@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/jrossyra/xyztraj.svg?branch=master)](https://travis-ci.org/jrossyra/xyztraj)
 
 XYZTraj is for reading xyz trajectories in Python, then preparing
 the data for other Python-based trajectory analysis tools. We will call
