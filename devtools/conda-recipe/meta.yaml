@@ -32,7 +32,6 @@ test:
     requires:
       - pytest
       - pytest-cov
-      - pytest-timeout
       - coverage
       - setuptools
 
