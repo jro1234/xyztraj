@@ -4,6 +4,9 @@ language: c
 sudo: false
 
 env:
+  global:
+    - MINICONDA_DIR="$HOME/miniconda"
+
   matrix:
     - CONDA_PY=3.6
     - CONDA_PY=3.7
