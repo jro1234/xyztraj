@@ -17,13 +17,13 @@ requirements:
     build:
       - python
       - setuptools
-
-    run:
-      - python
       # dependencies are defined in setup.py
       {% for dep in data['install_requires'] %}
       - {{ dep.lower() }}
       {% endfor %}
+
+    run:
+      - python
 
 test:
     requires:
