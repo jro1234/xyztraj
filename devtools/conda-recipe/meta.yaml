@@ -26,6 +26,9 @@ requirements:
       - python
 
 test:
+    source_files:
+      - setup.cfg
+
     requires:
       - pytest
       - pytest-cov

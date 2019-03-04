@@ -7,9 +7,14 @@ test_pkg = 'xyztraj'
 cover_pkg = test_pkg
 
 # where to write junit xml
-junit_xml = os.path.join(os.getenv('CIRCLE_TEST_REPORTS', os.path.expanduser('~')),
+junit_xml = os.path.join(os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~')),
                                  'reports', 'junit.xml')
+
+print("Current directory: ", os.getcwd())
+print("'TRAVIS_BUILD_DIR': ", os.path.join(os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~'))))
+
 target_dir = os.path.dirname(junit_xml)
+
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
     print('junit destination:', junit_xml)
@@ -29,6 +34,7 @@ if not os.path.exists(target_dir):
                 njobs_args=njobs_args,
         )
         .split(' '))
+
     print("args:", pytest_args)
     res = pytest.main(pytest_args)
 
