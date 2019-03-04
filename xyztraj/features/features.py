@@ -52,9 +52,9 @@ def _angle(points):
     p0, p1, p2 = points
 
     return np.degrees(np.arccos(
-        np.dot(p1-p0, p2-p1) /  \  # noqa E226
-        np.linalg.norm(p0-p1) / \  # noqa E226
-        np.linalg.norm(p2-p1)      # noqa E226
+        np.dot(p1 - p0, p2 - p1) / \
+        np.linalg.norm(p0 - p1) /  \
+        np.linalg.norm(p2 - p1)
     ))
 
 

@@ -29,15 +29,12 @@ test:
     requires:
       - pytest
       - pytest-cov
+      - pytest-timeout
       - coverage
       - setuptools
 
     import:
       - xyztraj
-
-    commmands:
-      - pip install pytest-timeout
-#      - py.test -v --pyargs xyztraj --doctest-modules --timeout=50
 
 about:
     home: https://github.com/jrossyra/xyztraj
