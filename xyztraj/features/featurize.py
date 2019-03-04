@@ -3,10 +3,11 @@ import numpy as np
 
 from .features import nofeature, distance, angle, dihedral, feature
 
+
 class Featurizer(object):
     '''Class that applies feature calculations to trajectory data
-    Pass the data on initialization, then add and apply feature calculations
-    to build a feature trajectory.
+    Pass the data on initialization, then add and apply feature
+    calculations to build a feature trajectory.
 
     Attributes
     ----------
@@ -37,16 +38,22 @@ class Featurizer(object):
         while features:
             featurename, atom_indices = features.pop()
             featurefunc = '_{}_'.format(featurename)
-            featurelabel = featurename + '-' + '_'.join([str(ai) for ai in atom_indices])
+            # TODO use featurelabels
+            # featurelabel = featurename + '-' + \
+            #        '_'.join([str(ai) for ai in atom_indices])
             if hasattr(self, featurefunc):
-                ff = lambda: getattr(self, featurefunc)(self._trajectory_coords, atom_indices)
+                ff = lambda: getattr(self, featurefunc)(
+                    self._trajectory_coords, atom_indices)
 
-            #elif isinmodule: bind_from_module
+            # elif isinmodule: bind_from_module
             elif callable(featurefunc):
-                ff = lambda: feature(featurefunc, self._trajectory_coords, atom_indices)
+                ff = lambda: feature(
+                    featurefunc, self._trajectory_coords, atom_indices)
 
             else:
-                raise Warning("Feature '{}' not added, require callable or name of existing feature function".format(featurename))
+                raise Warning(
+                    "Feature '{}' not added, require callable or "
+                    "existing feature name".format(featurename))
 
             self._feature_buffer.append(ff)
 
@@ -60,7 +67,7 @@ class Featurizer(object):
 
         vs = [featuretrajs]
         if self.trajectory:
-            vs.prepend(self.trajectory) 
+            vs.prepend(self.trajectory)
 
         self._trajectory = np.vstack(vs)
 
@@ -69,4 +76,3 @@ class Featurizer(object):
         '''Get the trajectory of all features calculated so far
         '''
         return self._trajectory
-

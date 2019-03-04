@@ -17,14 +17,12 @@ class XYZTrajectory(object):
         super(XYZTrajectory, self).__init__()
         self._frames = []
         self._atoms = None
-        #TODO self._elements
+        # TODO self._elements
         self._trajectory = None
-
 
     @property
     def atoms(self):
         return self._atoms
-
 
     @property
     def trajectory(self):
@@ -34,13 +32,13 @@ class XYZTrajectory(object):
             if self._trajectory is None:
                 self._trajectory = np.concatenate(self._frames)
             else:
-                self._trajectory = np.concatenate([self._trajectory] + self._frames)
+                self._trajectory = np.concatenate(
+                    [self._trajectory] + self._frames)
 
             del self._frames
             self._frames = []
 
         return self._trajectory
-
 
     def add_frames(self, frames_block):
         '''Add a block of frames to this trajectory instance
@@ -49,18 +47,19 @@ class XYZTrajectory(object):
         atomname = lambda atom: atom[0]
 
         if self._atoms is None:
-            self._atoms = np.array([ atomname(atom)
-              for atom in frames_block[0]], dtype='|S1')
+            self._atoms = np.array(
+                [atomname(atom) for atom in frames_block[0]],
+                dtype='|U1')
 
-        frames = np.array([ [coords(atom) for atom in frame]
-          for frame in frames_block], dtype=np.float64)
+        frames = np.array([
+            [coords(atom) for atom in frame]
+            for frame in frames_block],
+            dtype=np.float64)
 
         self._frames.append(frames)
-
 
     def __getitem__(self):
         # list-like slice indexing plz!
         # Navigate list of arrays or
         # build one larger one somewhere?
         raise NotImplementedError
-
