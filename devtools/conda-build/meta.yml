@@ -1,0 +1,43 @@
+package:
+    name: xyztraj-dev
+    # version number: [base tag]+[commits-upstream]_[git_hash]
+    # eg. 2.0+0_g8824162
+    version: {{ GIT_DESCRIBE_TAG[1:] + '+' + GIT_DESCRIBE_NUMBER + '.' + GIT_DESCRIBE_HASH}}
+
+source: 
+    path: ../../
+
+build: 
+    number: 0
+    script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+    build:
+      - python
+      - setuptools
+
+    run:
+      - python
+      # dependencies are defined in setup.py
+      {% for dep in data['install_requires'] %}
+      - {{ dep.lower() }}
+      {% endfor %}
+
+test:
+    requires:
+      - pytest
+      - pytest-cov
+      - coverage
+      - setuptools
+
+    import:
+      - xyztraj
+
+    commmands:
+      - pip install pytest-timeout
+#      - py.test -v --pyargs xyztraj --doctest-modules --timeout=50
+
+about:
+    home: https://github.com/jrossyra/xyztraj
+    license: LGPL 3.0 or later
+    summary: 'Read and work with XYZ trajectory files sans-topology.'

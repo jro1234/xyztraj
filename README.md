@@ -6,8 +6,8 @@ a calculation to all the frames in the trajectory.
 
 You can clone this repository and install the package with
 ```bash
-git clone https://github.com/jrossyra/xyzparser
-cd xyzparser
+git clone https://github.com/jrossyra/xyztraj
+cd xyztraj
 python setup.py install
 ```
 
