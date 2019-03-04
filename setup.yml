@@ -8,10 +8,10 @@ url:          https://github.com/jrossyra/xyztraj
 released:     false
 
 authors:
-- John Ossyra
+  - John Ossyra
 
 emails:
-- jrossyra@gmail.com
+  - jrossyra@gmail.com
 
 long_description: |
   XYZTraj implements an XYZ file reading object and trajectory object
@@ -33,16 +33,16 @@ classifiers: |
   Operating System :: MacOS
 
 packages:
-- xyztraj
-- xyztraj.features
+  - xyztraj
+  - xyztraj.features
 
 platforms:
-- Linux
-- Mac OS X
+  - Linux
+  - Mac OS X
 
 #scripts:
 #  - adaptivemd/scripts/adaptivemdworker
 
 install_requires:
-- pyyaml
-- numpy
+  - pyyaml
+  - numpy
