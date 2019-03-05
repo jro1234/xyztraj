@@ -27,15 +27,13 @@ requirements:
 test:
     source_files:
       - setup.cfg
+#      - conftest.py
 
     requires:
       - pytest
       - pytest-cov
       - coverage
       - setuptools
-
-    import:
-      - xyztraj
 
 about:
     home: https://github.com/jrossyra/xyztraj

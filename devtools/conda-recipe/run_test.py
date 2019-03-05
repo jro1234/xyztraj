@@ -8,7 +8,7 @@ import pytest
 test_pkg = 'xyztraj'
 cover_pkg = test_pkg
 
-cwd = os.getcwd()
+cwd = os.path.expandvars(os.getcwd())
 build_dir = os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~'))
 
 # where to write reports
@@ -44,6 +44,8 @@ if not os.path.exists(reports_dir):
         ).split(' '))
 
     print("args:", pytest_args)
+    #os.chdir(
     res = pytest.main(pytest_args)
+    #os.chdir(cwd)
 
     sys.exit(res)
