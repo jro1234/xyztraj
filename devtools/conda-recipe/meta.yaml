@@ -15,16 +15,14 @@ build:
 
 requirements:
     host:
-      - python
-      - setuptools
-
-    run:
-      - python
-      # dependencies are defined in setup.py
+      # data is defined in setup.py
       {% for dep in data['install_requires'] %}
       - {{ dep.lower() }}
       {% endfor %}
-      
+
+    run:
+      - python
+      - numpy
 
 test:
     source_files:
