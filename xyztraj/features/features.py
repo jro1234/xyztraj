@@ -10,18 +10,24 @@ _default_points_error = \
     "Could not format {n} points for feature function {func}"
 
 
-def angle(trajectory_array, atom_indices=None):
-    return feature(_angle, trajectory_array, atom_indices)()
-
-
-def use_n_points(n, error_message=None):
+def n_points(n, error_message=None):
     '''Decorater to enforce format for group of n coorindates
+    Wrap any feature-calculating function that uses atom
+    coordinates to detect from a set of acceptible formats
+    given n atoms.
+
+    Example
+    -------
+    @n_points(4[, my_error])
+    def my_feature_calculator(points):
+        <body>
     '''
     n_coords_point = 3
 
+    if error_message is None:
+        error_message = error_message.format(func=func.__name__, n=n)
+
     def _wrapper(func):
-        if error_message is None:
-            error_message = error_message.format(func=func.__name__, n=n)
 
         def wrapper(points_array):
             '''Return point coordinate vectors or raise error
@@ -45,7 +51,11 @@ def use_n_points(n, error_message=None):
     return _wrapper
 
 
-@use_n_points(3, _err_angle)
+def angle(trajectory_array, atom_indices=None):
+    return feature(_angle, trajectory_array, atom_indices)()
+
+
+@n_points(3, _default_points_error)
 def _angle(points):
     '''Order is important
     '''
@@ -91,7 +101,7 @@ def distance(trajectory_array, atom_indices=None):
     return np.linalg.norm(a1 - a2, axis=1)
 
 
-@use_n_points(4, _err_dihedral)
+@n_points(4, _default_points_error)
 def _dihedral(points):
     '''Praxeolitic formula
     Arguments
