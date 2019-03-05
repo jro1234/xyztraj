@@ -1,3 +1,6 @@
+# mid-build files
+miniconda.sh
+
 # additional example data
 examples/data/*
 

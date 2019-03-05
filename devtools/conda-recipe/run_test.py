@@ -17,8 +17,8 @@ reports_dir = os.path.join(build_dir, 'reports')
 junit_xml = os.path.join(reports_dir, 'junit.xml')
 coverage_xml = os.path.join(reports_dir, 'coverage.xml')
 
-print("Travis build directory: ", os.getcwd())
 print("Current directory: ", os.getcwd())
+print("Travis build directory: ", build_dir)
 print("Reports directory: ", reports_dir)
 print("Reports already exists? ", os.path.exists(reports_dir))
 
@@ -39,8 +39,8 @@ if not os.path.exists(reports_dir):
         .format(test_pkg=test_pkg, cover_pkg=cover_pkg,
                 junit_xml=junit_xml, pytest_cfg='setup.cfg',
                 njobs_args=njobs_args,
-                dest_report=coverage_xml),
-    ).split(' ')
+                dest_report=coverage_xml
+        ).split(' '))
 
     print("args:", pytest_args)
     res = pytest.main(pytest_args)
