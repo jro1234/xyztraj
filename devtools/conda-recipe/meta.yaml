@@ -14,16 +14,17 @@ build:
     script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
-    build:
+    host:
       - python
       - setuptools
+
+    run:
+      - python
       # dependencies are defined in setup.py
       {% for dep in data['install_requires'] %}
       - {{ dep.lower() }}
       {% endfor %}
-
-    run:
-      - python
+      
 
 test:
     source_files:

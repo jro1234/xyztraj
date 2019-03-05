@@ -3,20 +3,24 @@ import sys
 
 import pytest
 
+
 test_pkg = 'xyztraj'
 cover_pkg = test_pkg
 
-# where to write junit xml
-junit_xml = os.path.join(os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~')),
-                                 'reports', 'junit.xml')
+# where to write reports
+reports_dir = os.path.join(
+    os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~')), 'reports')
+
+# reports
+junit_xml = os.path.join(reports_dir, 'junit.xml')
+coverage_xml = os.path.join(reports_dir, 'coverage.xml')
 
 print("Current directory: ", os.getcwd())
-print("'TRAVIS_BUILD_DIR': ", os.path.join(os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~'))))
+print("Reports directory: ", reports_dir)
+print("Reports already exists? ", os.path.exists(reports_dir))
 
-target_dir = os.path.dirname(junit_xml)
-
-if not os.path.exists(target_dir):
-    os.makedirs(target_dir)
+if not os.path.exists(reports_dir):
+    os.makedirs(reports_dir)
     print('junit destination:', junit_xml)
     njobs_args = '-p no:xdist' if os.getenv('TRAVIS') else '-n2'
 
@@ -30,7 +34,7 @@ if not os.path.exists(target_dir):
         #"--durations=20 "
         .format(test_pkg=test_pkg, cover_pkg=cover_pkg,
                 junit_xml=junit_xml, pytest_cfg='setup.cfg',
-                dest_report=os.path.join(os.path.expanduser('~/'), 'coverage.xml'),
+                dest_report=coverage_xml),
                 njobs_args=njobs_args,
         )
         .split(' '))
