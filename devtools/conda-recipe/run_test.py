@@ -8,6 +8,7 @@ import pytest
 test_pkg = 'xyztraj'
 cover_pkg = test_pkg
 
+cwd = os.getcwd()
 build_dir = os.getenv('TRAVIS_BUILD_DIR', os.path.expanduser('~'))
 
 # where to write reports
@@ -17,7 +18,7 @@ reports_dir = os.path.join(build_dir, 'reports')
 junit_xml = os.path.join(reports_dir, 'junit.xml')
 coverage_xml = os.path.join(reports_dir, 'coverage.xml')
 
-print("Current directory: ", os.getcwd())
+print("Current directory: ", cwd)
 print("Travis build directory: ", build_dir)
 print("Reports directory: ", reports_dir)
 print("Reports already exists? ", os.path.exists(reports_dir))

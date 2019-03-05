@@ -5,10 +5,11 @@ include           versioneer.py
 global-exclude    __pycache__
 global-exclude    *.py[co]
 
-include           xyztraj/_version.py
 graft             xyztraj
+graft             tests
 
 prune             .eggs
+recursive-include examples
 prune             examples/data
 
 recursive-exclude * git .git*
