@@ -26,8 +26,12 @@ requirements:
 
 test:
     source_files:
+      - tests
       - setup.cfg
 #      - conftest.py
+
+#    command:
+#      - py.test
 
     requires:
       - pytest
