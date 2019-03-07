@@ -27,7 +27,7 @@ requirements:
 test:
     source_files:
       - tests
-      - setup.cfg
+#      - setup.cfg
 #      - conftest.py
 
 #    command:
