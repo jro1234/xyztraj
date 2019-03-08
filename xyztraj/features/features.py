@@ -44,7 +44,7 @@ class n_points(object):
                 func=func.__name__, n=self.n)
 
         def wrapper(points_array):
-            '''Return point coordinate vectors or raise error
+            '''Return point coordinate vectors
             '''
             if len(points_array.shape) == 2:
                 assert points_array.shape[0] == self.n
@@ -53,46 +53,16 @@ class n_points(object):
 
             elif len(points_array.shape) == 1:
                 assert points_array.shape[0] == self.n_coords_point * self.n
-                return func([  # sorting into 2D array of points
+                return func([  # sorting into (nx3) 2D array of n 3D points
                     points_array[i * self.n_coords_point:(i + 1) * self.n_coords_point]
                     for i in range(self.n)
                 ])
 
             else:
+                # hard to trigger, intermediate decorator shuffles array along
                 raise ValueError(error_message)
 
         return wrapper
-
-
-#def n_points(n, error_message=None):
-#    n_coords_point = 3
-#    error_message = error_message
-#
-#    def _wrapper(func):
-#
-#        if error_message is None:
-#            error_message = _default_points_error.format(func=func.__name__, n=n)
-#
-#        def wrapper(points_array):
-#            '''Return point coordinate vectors or raise error
-#            '''
-#            if len(points_array.shape) == 2:
-#                assert points_array.shape[1] == n_coords_point
-#                return func(points_array)
-#
-#            elif points_array.shape[0] == n_coords_point * n:
-#                assert len(points_array.shape) == 1
-#                return func([
-#                    points_array[i * n_coords_point:(i + 1) * n_coords_point]
-#                    for i in range(n_coords_point)
-#                ])
-#
-#            else:
-#                raise ValueError(error_message)
-#
-#        return wrapper
-#
-#    return _wrapper
 
 
 def angle(trajectory_array, atom_indices=None):
