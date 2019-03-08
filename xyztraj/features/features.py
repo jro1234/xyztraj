@@ -32,14 +32,14 @@ def n_points(n, error_message=None):
         def wrapper(points_array):
             '''Return point coordinate vectors or raise error
             '''
-            if len(points.shape) == 2:
-                assert points.shape[1] == n_coords_point
-                return func(points)
+            if len(points_array.shape) == 2:
+                assert points_array.shape[1] == n_coords_point
+                return func(points_array)
 
-            elif points.shape[0] == n_coords_point * n:
-                assert len(points.shape) == 1
+            elif points_array.shape[0] == n_coords_point * n:
+                assert len(points_array.shape) == 1
                 return func([
-                    points[i * n_coords_point:(i + 1) * n_coords_point]
+                    points_array[i * n_coords_point:(i + 1) * n_coords_point]
                     for i in range(n_coords_point)
                 ])
 
