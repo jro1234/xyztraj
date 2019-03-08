@@ -6,15 +6,21 @@ import numpy as np
 from ._featurize import _feature as feature
 
 
-_default_points_error = \
-    "Could not format {n} points for feature function {func}"
 
+class n_points(object):
+    '''Decorater to check that a group of n coorindates was given
+    to feature-calculating function that uses n atom coordinates.
+    Optionally, you can give an error message to the decorator to
+    use in place of the default message.
 
-def n_points(n, error_message=None):
-    '''Decorater to enforce format for group of n coorindates
-    Wrap any feature-calculating function that uses atom
-    coordinates to detect from a set of acceptible formats
-    given n atoms.
+    Decorated functions must take (nx3) array of 3D points as arg.
+
+    Arguments
+    ---------
+    n :: int number of points this feature requires
+
+    error_message [optional] ::  str message for incorrect input
+        to the decorated function
 
     Example
     -------
@@ -22,25 +28,34 @@ def n_points(n, error_message=None):
     def my_feature_calculator(points):
         <body>
     '''
-    n_coords_point = 3
+    _default_error = \
+        "Could not format {n} points for feature function {func}"
 
-    if error_message is None:
-        error_message = error_message.format(func=func.__name__, n=n)
+    def __init__(self, n, error_message=None):
+        assert isinstance(n, int)
+        assert isinstance(error_message, (type(None), str))
+        self.n = n
+        self.n_coords_point = 3
+        self.error_message = error_message
 
-    def _wrapper(func):
+    def __call__(self, func):
+        if self.error_message is None:
+            self.error_message = self._default_error.format(
+                func=func.__name__, n=self.n)
 
         def wrapper(points_array):
             '''Return point coordinate vectors or raise error
             '''
             if len(points_array.shape) == 2:
-                assert points_array.shape[1] == n_coords_point
+                assert points_array.shape[0] == self.n
+                assert points_array.shape[1] == self.n_coords_point
                 return func(points_array)
 
-            elif points_array.shape[0] == n_coords_point * n:
-                assert len(points_array.shape) == 1
-                return func([
-                    points_array[i * n_coords_point:(i + 1) * n_coords_point]
-                    for i in range(n_coords_point)
+            elif len(points_array.shape) == 1:
+                assert points_array.shape[0] == self.n_coords_point * self.n
+                return func([  # sorting into 2D array of points
+                    points_array[i * self.n_coords_point:(i + 1) * self.n_coords_point]
+                    for i in range(self.n)
                 ])
 
             else:
@@ -48,14 +63,43 @@ def n_points(n, error_message=None):
 
         return wrapper
 
-    return _wrapper
+
+#def n_points(n, error_message=None):
+#    n_coords_point = 3
+#    error_message = error_message
+#
+#    def _wrapper(func):
+#
+#        if error_message is None:
+#            error_message = _default_points_error.format(func=func.__name__, n=n)
+#
+#        def wrapper(points_array):
+#            '''Return point coordinate vectors or raise error
+#            '''
+#            if len(points_array.shape) == 2:
+#                assert points_array.shape[1] == n_coords_point
+#                return func(points_array)
+#
+#            elif points_array.shape[0] == n_coords_point * n:
+#                assert len(points_array.shape) == 1
+#                return func([
+#                    points_array[i * n_coords_point:(i + 1) * n_coords_point]
+#                    for i in range(n_coords_point)
+#                ])
+#
+#            else:
+#                raise ValueError(error_message)
+#
+#        return wrapper
+#
+#    return _wrapper
 
 
 def angle(trajectory_array, atom_indices=None):
     return feature(_angle, trajectory_array, atom_indices)()
 
 
-@n_points(3, _default_points_error)
+@n_points(3)
 def _angle(points):
     '''Order is important
     '''
@@ -101,7 +145,7 @@ def distance(trajectory_array, atom_indices=None):
     return np.linalg.norm(a1 - a2, axis=1)
 
 
-@n_points(4, _default_points_error)
+@n_points(4)
 def _dihedral(points):
     '''Praxeolitic formula
     Arguments
