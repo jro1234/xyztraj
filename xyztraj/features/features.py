@@ -4,69 +4,60 @@ import numpy as np
 # Nice name for each feature, users should import from
 # here to make features in their own scripts
 from ._featurize import _feature as feature
+from ._featurize import n_points
 
 
-
-class n_points(object):
-    '''Decorater to check that a group of n coorindates was given
-    to feature-calculating function that uses n atom coordinates.
-    Optionally, you can give an error message to the decorator to
-    use in place of the default message.
-
-    Decorated functions must take (nx3) array of 3D points as arg.
-
-    Arguments
-    ---------
-    n :: int number of points this feature requires
-
-    error_message [optional] ::  str message for incorrect input
-        to the decorated function
-
-    Example
+def nofeature(trajectory_array, atom_indices=None):
+    '''Return the coordinates of a set of 3 atoms
+    Returns
     -------
-    @n_points(4[, my_error])
-    def my_feature_calculator(points):
-        <body>
+    feature_trajectory :: numpy array (mxd)
+    Flattened input spatial coordinates dimension and values
     '''
-    _default_error = \
-        "Could not format {n} points for feature function {func}"
+    return feature(lambda x: x, trajectory_array, atom_indices)()
 
-    def __init__(self, n, error_message=None):
-        assert isinstance(n, int)
-        assert isinstance(error_message, (type(None), str))
-        self.n = n
-        self.n_coords_point = 3
-        self.error_message = error_message
+#@n_points(2)
+def distance(trajectory_array, atom_indices=None):
+    '''Array of 3D distances between 2 points over time
+    '''
+    # NOTE not XYZTraj way, traj-level implementation is easy
+    # return feature(_distance, trajectory_array, atom_indices)()
+    assert trajectory_array.shape[2] == 3
 
-    def __call__(self, func):
-        if self.error_message is None:
-            self.error_message = self._default_error.format(
-                func=func.__name__, n=self.n)
+    if atom_indices is None:
+        assert trajectory_array.shape[1] == 2
+        atom_indices = [0, 1]
 
-        def wrapper(points_array):
-            '''Return point coordinate vectors
-            '''
-            if len(points_array.shape) == 2:
-                assert points_array.shape[0] == self.n
-                assert points_array.shape[1] == self.n_coords_point
-                return func(points_array)
+    a1, a2 = [trajectory_array[:, ai, :] for ai in atom_indices]
 
-            elif len(points_array.shape) == 1:
-                assert points_array.shape[0] == self.n_coords_point * self.n
-                return func([  # sorting into (nx3) 2D array of n 3D points
-                    points_array[i * self.n_coords_point:(i + 1) * self.n_coords_point]
-                    for i in range(self.n)
-                ])
+    return np.linalg.norm(a1 - a2, axis=1)
 
-            else:
-                # hard to trigger, intermediate decorator shuffles array along
-                raise ValueError(error_message)
 
-        return wrapper
+def contact(trajectory_array, cutoff=5, atom_indices=None):
+    '''Boolean array indicating if atoms come within minimum distance
+    '''
+    dist = distance(trajectory_array, atom_indices)
+    return dist < cutoff
 
 
 def angle(trajectory_array, atom_indices=None):
+    '''Calculate the angle trajectory for a set of 3 atoms
+    Returns
+    -------
+    feature_trajectory :: numpy array (mx1)
+    Trajectory array of m frames each with 1-dimensional feature (angle) value
+    '''
     return feature(_angle, trajectory_array, atom_indices)()
+
+
+def dihedral(trajectory_array, atom_indices=None):
+    '''Calculate the dihedral angle trajectory for a set of 4 atoms
+    Returns
+    -------
+    feature_trajectory :: numpy array (mx1)
+    Trajectory array of m frames each with 1-dimensional feature (dihedral) value
+    '''
+    return feature(_dihedral, trajectory_array, atom_indices)()
 
 
 @n_points(3)
@@ -80,39 +71,6 @@ def _angle(points):
         np.linalg.norm(p0 - p1) /  \
         np.linalg.norm(p2 - p1)
     ))
-
-
-def nofeature(trajectory_array, atom_indices=None):
-    return feature(lambda x: x, trajectory_array, atom_indices)()
-
-
-def dihedral(trajectory_array, atom_indices=None):
-    '''Calculate the dihedral angle trajectory for a set of atoms
-    Returns
-    -------
-    feature_trajectory :: numpy array (mxd)
-    Trajectory array of m frames each with d-dimensional feature value
-    '''
-    # TODO do type check/asserts in here?
-    #       - yes, fail early
-    #       - no, more flexible?
-    return feature(_dihedral, trajectory_array, atom_indices)()
-
-
-def distance(trajectory_array, atom_indices=None):
-    '''Array of 3D norms of timeseries of 2 points
-    '''
-    # Not doing this way, faster implementation is easy
-    # return feature(_distance, trajectory_array, atom_indices)()
-    assert trajectory_array.shape[2] == 3
-
-    if atom_indices is None:
-        assert trajectory_array.shape[1] == 2
-        atom_indices = [0, 1]
-
-    a1, a2 = [trajectory_array[:, ai, :] for ai in atom_indices]
-
-    return np.linalg.norm(a1 - a2, axis=1)
 
 
 @n_points(4)
