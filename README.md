@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/jrossyra/xyztraj.svg?branch=master)](https://travis-ci.org/jrossyra/xyztraj)
-
+[![codecov.io](http://codecov.io/github/jrossyra/xyztraj/coverage.svg?branch=master)](http://codecov.io/github/jrossyra/xyztraj?branch=master)
 XYZTraj is for reading xyz trajectories in Python, then preparing
 the data for other Python-based trajectory analysis tools. We will call
 this 'featurizing' the data, i.e. creating new trajectories by applying
