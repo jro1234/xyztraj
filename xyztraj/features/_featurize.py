@@ -28,6 +28,7 @@ class n_points(object):
 
     def __init__(self, n, error_message=None):
         assert isinstance(n, int)
+        assert n > 0
         assert isinstance(error_message, (type(None), str))
         self.n = n
         self.n_coords_point = 3

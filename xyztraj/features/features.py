@@ -16,6 +16,7 @@ def nofeature(trajectory_array, atom_indices=None):
     '''
     return feature(lambda x: x, trajectory_array, atom_indices)()
 
+
 #@n_points(2)
 def distance(trajectory_array, atom_indices=None):
     '''Array of 3D distances between 2 points over time
