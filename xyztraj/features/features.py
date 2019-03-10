@@ -34,11 +34,11 @@ def distance(trajectory_array, atom_indices=None):
     return np.linalg.norm(a1 - a2, axis=1)
 
 
-def contact(trajectory_array, cutoff=5, atom_indices=None):
+def contact(trajectory_array, atom_indices=None, cutoff=5):
     '''Boolean array indicating if atoms come within minimum distance
     '''
-    dist = distance(trajectory_array, atom_indices)
-    return dist < cutoff
+    as_bool = distance(trajectory_array, atom_indices) < cutoff
+    return 1 * as_bool  # converts to 0/1 int
 
 
 def angle(trajectory_array, atom_indices=None):
