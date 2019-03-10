@@ -20,5 +20,5 @@ script:
   - conda build -q devtools/conda-recipe
 
 after_script:
-  - bash <(curl -s https://codecov.io/bash) -f $HOME/coverage.xml -e CONDA_PY
+  - bash <(curl -s https://codecov.io/bash) -f $HOME/xyztraj/build/reports/coverage.xml -e CONDA_PY
 
